@@ -6,9 +6,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 @SpringBootApplication
-public class BackendApplication implements CommandLineRunner {
+public class BackendApplication extends SpringBootServletInitializer implements CommandLineRunner {
 	private Logger log = LoggerFactory.getLogger(this.getClass());
 
 	public static void main(String[] args) {
