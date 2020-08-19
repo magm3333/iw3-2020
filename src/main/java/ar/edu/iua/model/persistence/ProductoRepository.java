@@ -5,7 +5,13 @@ import org.springframework.stereotype.Repository;
 
 import ar.edu.iua.model.Producto;
 
+import java.util.Optional;
+
 @Repository
 public interface ProductoRepository extends JpaRepository<Producto, Long> {
+
+    Optional<Producto> findByDescripcion(String descripcionProducto);
+
+    Optional<Producto> findByPrecioLista(Double precioLista);
 
 }

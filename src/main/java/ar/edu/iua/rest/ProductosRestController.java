@@ -9,14 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import ar.edu.iua.business.IProductoBusiness;
 import ar.edu.iua.business.exception.BusinessException;
@@ -28,7 +21,7 @@ import ar.edu.iua.model.Producto;
 public class ProductosRestController extends BaseRestController {
 
 	private Logger log = LoggerFactory.getLogger(this.getClass());
-	
+
 	@Autowired
 	private IProductoBusiness productoBusiness;
 
@@ -94,5 +87,16 @@ public class ProductosRestController extends BaseRestController {
 		}
 	}
 
-	
+    //curl -X GET  'http://localhost:8080/api/v1/productos/description?desc=arroz%20gallo%20de%20oro'
+    @GetMapping(value = "/description")
+    public ResponseEntity<Producto> loadByDescription(@RequestParam("desc") String desc) {
+        try {
+            return new ResponseEntity<Producto>(productoBusiness.findByDescripcion(desc), HttpStatus.OK);
+        } catch (BusinessException e) {
+            return new ResponseEntity<Producto>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<Producto>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 }

@@ -1,5 +1,7 @@
 package ar.edu.iua;
 
+import ar.edu.iua.model.Producto;
+import ar.edu.iua.model.persistence.ProductoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,18 +18,20 @@ public class BackendApplication extends SpringBootServletInitializer implements 
 	public static void main(String[] args) {
 		SpringApplication.run(BackendApplication.class, args);
 	}
-	
+
 	@Value("${spring.datasource.url}")
 	private String springDatasourceUrl;
 
 
 	@Autowired
 	private IPruebaPerfil pruebaPerfil;
-	
+
+
 	@Override
 	public void run(String... args) throws Exception {
 		log.info("DataSource URL: {}", springDatasourceUrl);
 		pruebaPerfil.mensaje();
+
 	}
 
 }

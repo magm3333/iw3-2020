@@ -16,4 +16,6 @@ public interface IProductoBusiness {
 
 	public void delete(Long id) throws BusinessException, NotFoundException;
 
+    public Producto findByDescripcion(String descripcionProducto) throws BusinessException, NotFoundException;
+
 }
