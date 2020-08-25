@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import ar.edu.iua.business.exception.BusinessException;
@@ -33,20 +34,47 @@ public class ProductoBusiness implements IProductoBusiness {
 
 	@Override
 	public List<Producto> list() throws BusinessException {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			return productoDAO.findAll();
+		} catch (Exception e) {
+			throw new BusinessException(e);
+		}
 	}
 
 	@Override
-	public Producto save(Producto producto) throws BusinessException {
-		// TODO Auto-generated method stub
-		return null;
+	public Producto add(Producto producto) throws BusinessException {
+		try {
+			return productoDAO.save(producto);
+		} catch (Exception e) {
+			throw new BusinessException(e);
+		}
 	}
 
 	@Override
 	public void delete(Long id) throws NotFoundException, BusinessException {
-		// TODO Auto-generated method stub
+		try {
+			productoDAO.deleteById(id);
+		} catch (EmptyResultDataAccessException e1) {
+			throw new NotFoundException("No se encuentra el producto id=" + id);
+		} catch (Exception e) {
+			throw new BusinessException(e);
+		}
 
+	}
+
+	@Override
+	public Producto update(Producto producto) throws NotFoundException, BusinessException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Producto> list(String parte) throws BusinessException {
+		try {
+			return productoDAO.findByNombreContainingOrDescripcionContainingOrderByNombreDesc(parte, parte);
+		} catch (Exception e) {
+			throw new BusinessException(e);
+		}
 	}
 
 }
