@@ -28,9 +28,8 @@ import ar.edu.iua.model.Producto;
 @RequestMapping(value = Constantes.URL_PRODUCTOS)
 public class ProductoRestController {
 
-	
 	private Logger log = LoggerFactory.getLogger(this.getClass());
-	
+
 	@Autowired
 	private IProductoBusiness productoBusiness;
 
@@ -104,7 +103,7 @@ public class ProductoRestController {
 			productoBusiness.delete(id);
 			return new ResponseEntity<String>(HttpStatus.OK);
 		} catch (BusinessException e) {
-		    log.error(e.getMessage(), e);
+			log.error(e.getMessage(), e);
 			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (NotFoundException e) {
 			return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
