@@ -2,6 +2,7 @@ package ar.edu.iua;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -15,6 +16,8 @@ public class BackendApplication implements CommandLineRunner{
 		SpringApplication.run(BackendApplication.class, args);
 	}
 
+	@Autowired
+	private IPruebaPerfil pruebaPerfil;
 	
 	@Value("${spring.datasource.url:pepe}")
 	private String springDatasourceUrl;
@@ -22,7 +25,7 @@ public class BackendApplication implements CommandLineRunner{
 	@Override
 	public void run(String... args) throws Exception {
 		log.info("DataSource URL: {}", springDatasourceUrl);
-		
+		pruebaPerfil.mensaje();
 	}
 	
 	
