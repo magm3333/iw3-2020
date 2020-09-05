@@ -8,38 +8,38 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootApplication
-public class BackendApplication extends SpringBootServletInitializer implements CommandLineRunner{
+public class BackendApplication extends SpringBootServletInitializer implements CommandLineRunner {
 	private Logger log = LoggerFactory.getLogger(this.getClass());
+
 	public static void main(String[] args) {
-	
+
 		SpringApplication.run(BackendApplication.class, args);
 	}
 
 	@Autowired
 	private IPruebaPerfil pruebaPerfil;
-	
+
 	@Value("${spring.datasource.url:pepe}")
 	private String springDatasourceUrl;
-	
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
 	@Override
 	public void run(String... args) throws Exception {
 		log.info("DataSource URL: {}", springDatasourceUrl);
 		pruebaPerfil.mensaje();
+
+		log.info("Password 123= {}", passwordEncoder.encode("123"));
 	}
-	
-	
+
 }
 
 /*
-Modelo
-  | -- > Persistencia
-----------------------------
-Negocio
-----------------------------
-Servicios WEB (REST)
-  | --> servicio 1   |
-  | --> servicio 2   | seguridad
-  | --> servicio N   V
-*/
+ * Modelo | -- > Persistencia ---------------------------- Negocio
+ * ---------------------------- Servicios WEB (REST) | --> servicio 1 | | -->
+ * servicio 2 | seguridad | --> servicio N V
+ */
