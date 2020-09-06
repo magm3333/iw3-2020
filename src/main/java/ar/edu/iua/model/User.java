@@ -22,6 +22,7 @@ import javax.persistence.Table;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @Table(name = "users")
@@ -122,8 +123,6 @@ public class User implements Serializable, UserDetails {
 		this.roles = roles;
 	}
 
-	
-	
 	@Column(columnDefinition = "tinyint default 0")
 	private boolean accountNonExpired = true;
 
@@ -175,8 +174,20 @@ public class User implements Serializable, UserDetails {
 		return authorities;
 	}
 
-	@Transient 
+	@Transient
 	public String getNombreCompleto() {
 		return String.format("%s, %s", getApellido(), getNombre());
+	}
+
+	public String checkAccount(PasswordEncoder passwordEncoder, String password) {
+		if (!passwordEncoder.matches(password, getPassword()))
+			return "BAD_PASSWORD";
+		if (!isEnabled())
+			return "ACCOUNT_NOT_ENABLED";
+		if (!isAccountNonLocked())
+			return "ACCOUNT_LOCKED";
+		if (!isCredentialsNonExpired())
+			return "CREDENTIALS_EXPIRED";
+		return null;
 	}
 }

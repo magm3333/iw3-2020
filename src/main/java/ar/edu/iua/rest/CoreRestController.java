@@ -33,23 +33,17 @@ public class CoreRestController extends BaseRestController {
 	public ResponseEntity<String> loginToken(@RequestParam(value = "username") String username,
 			@RequestParam(value = "password") String password) {
 		try {
-
 			User u = userBusiness.load(username);
-			if (!passwordEncoder.matches(password, u.getPassword()))
-				return new ResponseEntity<String>("BAD_PASSWORD", HttpStatus.UNAUTHORIZED);
-
-			if (!u.isEnabled())
-				return new ResponseEntity<String>("ACCOUNT_NOT_ENABLED", HttpStatus.UNAUTHORIZED);
-			if (!u.isAccountNonLocked())
-				return new ResponseEntity<String>("ACCOUNT_LOCKED", HttpStatus.UNAUTHORIZED);
-			if (!u.isCredentialsNonExpired())
-				return new ResponseEntity<String>("CREDENTIALS_EXPIRED", HttpStatus.UNAUTHORIZED);
-
-			UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(u, null,
-					u.getAuthorities());
-			SecurityContextHolder.getContext().setAuthentication(auth);
-			return new ResponseEntity<String>(userToJson(getUserLogged()).get("authtoken").toString(), HttpStatus.OK);
-
+			String msg = u.checkAccount(passwordEncoder, password);
+			if (msg != null) {
+				return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
+			} else {
+				UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(u, null,
+						u.getAuthorities());
+				SecurityContextHolder.getContext().setAuthentication(auth);
+				return new ResponseEntity<String>(userToJson(getUserLogged()).get("authtoken").toString(),
+						HttpStatus.OK);
+			}
 		} catch (BusinessException e) {
 			log.error(e.getMessage());
 			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
