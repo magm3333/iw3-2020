@@ -24,9 +24,15 @@ import ar.edu.iua.business.IProductoBusiness;
 import ar.edu.iua.business.exception.BusinessException;
 import ar.edu.iua.business.exception.NotFoundException;
 import ar.edu.iua.model.Producto;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping(value = Constantes.URL_PRODUCTOS)
+@Api(value = "Productos", description = "Operaciones relacionadas con los productos", tags = { "Productos" })
 public class ProductoRestController {
 
 	private Logger log = LoggerFactory.getLogger(this.getClass());
@@ -35,8 +41,18 @@ public class ProductoRestController {
 	private IProductoBusiness productoBusiness;
 
 	// curl "http://localhost:8080/api/v1/productos/1" -v
+	@ApiOperation(value="Obtener un producto mediante el ID", response = Producto.class)
+
+	@ApiResponses(value = { 
+			@ApiResponse(code = 200, message = "Operación exitosa"),
+			@ApiResponse(code = 401, message = "No loguad@"),
+			@ApiResponse(code = 403, message = "Acceso denegado por falta de permisos"),
+			@ApiResponse(code = 404, message = "No se encuentra el producto"), 
+			@ApiResponse(code = 500, message = "Error interno del servidor") 
+	})
+
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Producto> load(@PathVariable("id") Long id) {
+	public ResponseEntity<Producto> load( @ApiParam(value = "El ID del producto que se desea obtener") @PathVariable("id") Long id) {
 
 		try {
 			return new ResponseEntity<Producto>(productoBusiness.load(id), HttpStatus.OK);

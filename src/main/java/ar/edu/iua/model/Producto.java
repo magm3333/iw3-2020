@@ -16,6 +16,10 @@ import org.hibernate.annotations.TypeDef;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vladmihalcea.hibernate.type.json.JsonStringType;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+@ApiModel(value = "Producto", description = "Modelo de producto de ventas")
 @Entity
 @Table(name="produtos")
 @TypeDef(name = "json", typeClass = JsonStringType.class)
@@ -23,20 +27,24 @@ public class Producto implements Serializable {
 
 	private static final long serialVersionUID = 5081791146397214235L;
 	
+	@ApiModelProperty(notes = "Identificador del producto, clave autogenerada", required = false)
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@ApiModelProperty(notes = "Nombre del producto", required = true)
 	@Column(length = 100, nullable = false)
 	private String nombre;
 	
+	@ApiModelProperty(notes = "Descripción extendida del producto", required = true)
 	@Column(length = 200)
 	private String descripcion;
 	
-	
+	@ApiModelProperty(notes = "Precio actual del producto", required = true)
 	private double precioLista;
 	
 	
+	@ApiModelProperty(notes = "Indica si el producto se encuentra actualmente en stock", required = true)
 	@Column(columnDefinition = "TINYINT DEFAULT 0")
 	private boolean enStock;
 	
