@@ -65,6 +65,12 @@
 			<artifactId>spring-boot-starter-tomcat</artifactId>
 			<scope>${tomcat.scope}</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>com.vladmihalcea</groupId>
+			<artifactId>hibernate-types-52</artifactId>
+			<version>2.9.13</version>
+		</dependency>
 	</dependencies>
 
 	<profiles>

@@ -2,6 +2,8 @@ package ar.edu.iua.business;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import ar.edu.iua.business.exception.BusinessException;
 import ar.edu.iua.business.exception.NotFoundException;
 import ar.edu.iua.model.Producto;
@@ -19,4 +21,6 @@ public interface IProductoBusiness {
 	public Producto update(Producto producto) throws NotFoundException, BusinessException;
 
 	public void delete(Long id) throws NotFoundException, BusinessException;
+	
+	public Producto setFoto(Long id, MultipartFile file) throws NotFoundException, BusinessException;
 }

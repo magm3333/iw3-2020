@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import ar.edu.iua.business.IProductoBusiness;
 import ar.edu.iua.business.exception.BusinessException;
@@ -109,6 +110,51 @@ public class ProductoRestController {
 			return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
 		}
 	}
+
+	@PostMapping(value = "/{id}/foto", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<String> setFoto(@PathVariable("id") Long id, @RequestParam("file") MultipartFile file) {
+		try {
+			Producto p = productoBusiness.setFoto(id, file);
+			HttpHeaders responseHeaders = new HttpHeaders();
+			responseHeaders.set("location", Constantes.URL_PRODUCTOS + "/" + p.getId());
+			return new ResponseEntity<String>(responseHeaders, HttpStatus.CREATED);
+		} catch (BusinessException e) {
+			log.error(e.getMessage(), e);
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (NotFoundException e) {
+			return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+		}
+	}
+
+	@GetMapping(value = "/{id}/foto")
+	public ResponseEntity<byte[]> getFoto(@PathVariable("id") Long id) {
+		try {
+			Producto p = productoBusiness.load(id);
+			if (p.getFoto() == null || p.getFoto().length == 0)
+				return new ResponseEntity<byte[]>(HttpStatus.NOT_FOUND);
+			HttpHeaders responseHeaders = new HttpHeaders();
+			responseHeaders.set("Content-Type", p.getFotoMimeType());
+			responseHeaders.set("Content-Disposition",
+					String.format("attachment; filename=\"foto_%s.jpg\"", p.getId()));
+			return new ResponseEntity<byte[]>(p.getFoto(), responseHeaders, HttpStatus.OK);
+		} catch (BusinessException e) {
+			log.error(e.getMessage(), e);
+			return new ResponseEntity<byte[]>(HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (NotFoundException e) {
+			return new ResponseEntity<byte[]>(HttpStatus.NOT_FOUND);
+		}
+	}
+
+	/*
+	 * curl --location --request PUT 'http://localhost:8080/api/v1/productos' \
+	 * --header 'Content-Type: application/json' \ --data-raw ' { "id": 1, "nombre":
+	 * "Arroz", "descripcion": "Arroz barato", "precioLista": 16.0, "enStock": true,
+	 * "comentarios": "{\"user\":\"magm\",\"comentario\":\"No se pasa\"}" }'
+	 * 
+	 * curl --location --request POST
+	 * 'http://localhost:8080/api/v1/productos/1/foto' \ --form
+	 * 'file=@/home/mariano/Descargas/linux.jpg' -v
+	 */
 
 //URL-> http://localhost:8080/api/v1/productos/1 --> IProductoBusiness.load(  1 ) 
 
