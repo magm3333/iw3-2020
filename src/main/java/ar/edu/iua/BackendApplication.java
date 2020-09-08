@@ -8,6 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootApplication
 public class BackendApplication extends SpringBootServletInitializer implements CommandLineRunner{
@@ -23,10 +24,15 @@ public class BackendApplication extends SpringBootServletInitializer implements 
 	@Value("${spring.datasource.url:pepe}")
 	private String springDatasourceUrl;
 	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	
 	@Override
 	public void run(String... args) throws Exception {
 		log.info("DataSource URL: {}", springDatasourceUrl);
 		pruebaPerfil.mensaje();
+		
+		log.info("123 codificado es: {}", passwordEncoder.encode("123"));
 	}
 	
 	
