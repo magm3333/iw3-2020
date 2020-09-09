@@ -2,12 +2,7 @@ package ar.edu.iua.model;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "productos")
@@ -26,6 +21,18 @@ public class Producto implements Serializable {
 	private double precioLista;
 	@Column(columnDefinition = "TINYINT DEFAULT 0")
 	private boolean enStock;
+
+
+
+    @OneToOne(cascade =  CascadeType.ALL)
+    private ProductoDetalle productoDetalle;
+
+
+    @ManyToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name = "proveedor_id")
+    private Proveedor proveedor;
+
+
 
 	public Long getId() {
 		return id;
@@ -67,4 +74,19 @@ public class Producto implements Serializable {
 		this.enStock = enStock;
 	}
 
+    public ProductoDetalle getProductoDetalle() {
+        return productoDetalle;
+    }
+
+    public void setProductoDetalle(ProductoDetalle productoDetalle) {
+        this.productoDetalle = productoDetalle;
+    }
+
+    public Proveedor getProveedor() {
+        return proveedor;
+    }
+
+    public void setProveedor(Proveedor proveedor) {
+        this.proveedor = proveedor;
+    }
 }

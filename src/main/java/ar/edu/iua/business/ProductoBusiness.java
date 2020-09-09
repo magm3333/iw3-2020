@@ -67,16 +67,31 @@ public class ProductoBusiness implements IProductoBusiness {
 
 
     @Override
-    public Producto findByDescripcion(String descripcionProducto) throws BusinessException, NotFoundException {
+    public Producto findByDescripcionContains(String descripcionProducto) throws BusinessException, NotFoundException {
         Optional<Producto> op = null;
         try {
             log.info("Getting by description");
-            op = productoDAO.findByDescripcion(descripcionProducto);
+            op = productoDAO.findByDescripcionContains(descripcionProducto);
         } catch (Exception e) {
             throw new BusinessException(e);
         }
         if (!op.isPresent())
             throw new NotFoundException("No se encuentra el producto con descripcion=" + descripcionProducto);
+        return op.get();
+
+    }
+
+    @Override
+    public Producto findByPrecioListaAfter(double precioMayor) throws BusinessException, NotFoundException {
+        Optional<Producto> op = null;
+        try {
+            log.info("Getting by precio");
+            op = productoDAO.findByPrecioListaAfter(precioMayor);
+        } catch (Exception e) {
+            throw new BusinessException(e);
+        }
+        if (!op.isPresent())
+            throw new NotFoundException("No se encuentra el producto con precio mayor a " + precioMayor);
         return op.get();
 
     }
