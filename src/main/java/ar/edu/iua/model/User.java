@@ -1,6 +1,5 @@
 package ar.edu.iua.model;
 
-import java.beans.Transient;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
@@ -18,6 +17,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -189,5 +189,16 @@ public class User implements Serializable, UserDetails {
 		if (!isCredentialsNonExpired())
 			return "CREDENTIALS_EXPIRED";
 		return null;
+	}
+
+	@Transient
+	private String sessionToken;
+
+	public String getSessionToken() {
+		return sessionToken;
+	}
+
+	public void setSessionToken(String sessionToken) {
+		this.sessionToken = sessionToken;
 	}
 }

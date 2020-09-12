@@ -9,6 +9,8 @@ public interface IAuthTokenBusiness {
 	public AuthToken load(String series) throws BusinessException, NotFoundException;
 
 	public void delete(AuthToken at) throws BusinessException;
+	
+	public void delete(String token) throws BusinessException;
 
 	public void purgeTokens() throws BusinessException;
 

@@ -51,10 +51,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	        .antMatchers("/anonymous*").anonymous()
 	        .antMatchers("/login*").permitAll()
 	        .antMatchers("/logout*").permitAll()
+	        .antMatchers("/index.html").permitAll()
+	        .antMatchers("/favicon.*").permitAll()	        
+	        .antMatchers("/ui/**").permitAll()
 	        .anyRequest().authenticated().and()
 	        .headers().frameOptions().disable();
 		//@formatter:on
-		http.httpBasic();
+		//http.httpBasic();
 
 		http.addFilterAfter(new CustomTokenAuthenticationFilter(authTokenBusiness, userBusiness),
 				UsernamePasswordAuthenticationFilter.class);

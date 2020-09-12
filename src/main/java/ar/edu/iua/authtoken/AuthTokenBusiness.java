@@ -42,7 +42,7 @@ public class AuthTokenBusiness implements IAuthTokenBusiness {
 		try {
 			authTokenDAO.delete(at);
 		} catch (Exception e) {
-			// throw new ServiceException(e);
+			throw new BusinessException(e);
 		}
 
 	}
@@ -54,6 +54,17 @@ public class AuthTokenBusiness implements IAuthTokenBusiness {
 			authTokenDAO.purgeDefault(new Date());
 			authTokenDAO.purgeFromToDate(new Date());
 			authTokenDAO.purgeRequestLimit();
+		} catch (Exception e) {
+			throw new BusinessException(e);
+		}
+
+	}
+
+	@Override
+	public void delete(String token) throws BusinessException {
+		try {
+			String serie = AuthToken.decode(token)[0];
+			authTokenDAO.deleteById(serie);
 		} catch (Exception e) {
 			throw new BusinessException(e);
 		}
