@@ -1,10 +1,14 @@
 package ar.edu.iua.model;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,10 +17,19 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+
 
 @Entity
 @Table(name = "users")
-public class User implements Serializable{
+public class User implements Serializable,  UserDetails {
+
 
 	public Integer getId() {
 		return id;
@@ -100,7 +113,7 @@ public class User implements Serializable{
 		this.rolPrincipal = rolPrincipal;
 	}
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name="users_roles", 
 		joinColumns= {@JoinColumn(name="id_user", referencedColumnName = "id")}, 
 		inverseJoinColumns = {@JoinColumn(name="id_rol", referencedColumnName = "id")}
@@ -114,4 +127,108 @@ public class User implements Serializable{
 	public void setRoles(Set<Rol> roles) {
 		this.roles = roles;
 	}
+
+	@Column(columnDefinition = "tinyint default 1")
+	private boolean accountNonExpired = true;
+
+	public boolean isAccountNonExpired() {
+		return accountNonExpired;
+	}
+
+	public void setAccountNonExpired(boolean accountNonExpired) {
+		this.accountNonExpired = accountNonExpired;
+	}
+
+	public boolean isAccountNonLocked() {
+		return accountNonLocked;
+	}
+
+	public void setAccountNonLocked(boolean accountNonLocked) {
+		this.accountNonLocked = accountNonLocked;
+	}
+
+	public boolean isCredentialsNonExpired() {
+		return credentialsNonExpired;
+	}
+
+	public void setCredentialsNonExpired(boolean credentialsNonExpired) {
+		this.credentialsNonExpired = credentialsNonExpired;
+	}
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	@Column(columnDefinition = "tinyint default 1")
+	private boolean accountNonLocked = true;
+
+	@Column(columnDefinition = "tinyint default 1")
+	private boolean credentialsNonExpired = true;
+
+	@Column(columnDefinition = "tinyint default 1")
+	private boolean enabled;
+
+	@Transient 
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		
+		/*List<GrantedAuthority> authorities=new ArrayList<GrantedAuthority>();
+		for(Rol role:getRoles()) {
+			authorities.add(new SimpleGrantedAuthority(role.getRol()));
+		}*/
+		
+		List<GrantedAuthority> authorities = getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getRol()))
+				.collect(Collectors.toList());
+		
+		
+		
+		return authorities;
+	}
+
+	
+	@Transient 
+	public String getNombreCompleto() {
+		return String.format("%s, %s", getApellido(), getNombre());
+	}
+	
+ 
+	
+	public String checkAccount(PasswordEncoder passwordEncoder, String password) {
+		if (!passwordEncoder.matches(password, getPassword()))
+			return "BAD_PASSWORD";
+		if (!isEnabled())
+			return "ACCOUNT_NOT_ENABLED";
+		if (!isAccountNonLocked())
+			return "ACCOUNT_LOCKED";
+		if (!isCredentialsNonExpired())
+			return "CREDENTIALS_EXPIRED";
+		if (!isAccountNonExpired())
+			return "ACCOUNT_EXPIRED";
+		
+		
+		return null;
+	}
+
+
+/*
+ 
+ R1--------
+ R2--------
+ R3--------
+ .stream()
+ 
+ R1-------- R2--------  R3--------
+ 
+ .collect()
+ 
+ R1--------
+ R2--------
+ R3--------
+ 
+ */
+	
 }
