@@ -6,6 +6,15 @@ angular.module('iw3',
 .run(['$rootScope','$uibModal','coreService','$location','$log','$localStorage',
 	function($rootScope, $uibModal, coreService, $location, $log,$localStorage) {
 
+	$rootScope.userData=function() {
+		return $localStorage.userdata;
+	};
+	
+	$rootScope.logout=function() {
+		coreService.logout();
+	};
+	
+	
 	$rootScope.openLoginForm = function(size) {
 		if (!$rootScope.loginOpen) {
 			//$rootScope.cleanLoginData();

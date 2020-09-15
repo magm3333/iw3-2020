@@ -52,7 +52,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	        .antMatchers("/login*").permitAll()
 	        .antMatchers("/logout*").permitAll()
 	        .antMatchers("/index.html").permitAll()
-	        .antMatchers("/favicon.*").permitAll()	        
+	        .antMatchers("/favicon.*").permitAll()	 
+	        .antMatchers("/").permitAll()
 	        .antMatchers("/ui/**").permitAll()
 	        .anyRequest().authenticated().and()
 	        .headers().frameOptions().disable();
