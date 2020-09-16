@@ -1,11 +1,17 @@
 package ar.edu.iua.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "productos")
+@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="id")
+
 public class Producto implements Serializable {
 
 	private static final long serialVersionUID = 451621105748580924L;
@@ -32,6 +38,13 @@ public class Producto implements Serializable {
     @JoinColumn(name = "proveedor_id")
     private Proveedor proveedor;
 
+
+
+    @ManyToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "producto_ingrediente_detalle",
+            joinColumns = @JoinColumn(name = "producto_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "ingrediente_id", referencedColumnName = "id"))
+    private List<Ingrediente> ingredienteList;
 
 
 	public Long getId() {
@@ -89,4 +102,13 @@ public class Producto implements Serializable {
     public void setProveedor(Proveedor proveedor) {
         this.proveedor = proveedor;
     }
+
+    public List<Ingrediente> getIngredienteList() {
+        return ingredienteList;
+    }
+
+    public void setIngredienteList(List<Ingrediente> ingredienteList) {
+        this.ingredienteList = ingredienteList;
+    }
+
 }

@@ -1,10 +1,13 @@
 package ar.edu.iua.business;
 
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 import ar.edu.iua.business.exception.BusinessException;
 import ar.edu.iua.business.exception.NotFoundException;
 import ar.edu.iua.model.Producto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 
 public interface IProductoBusiness {
 
@@ -21,4 +24,9 @@ public interface IProductoBusiness {
     public Producto findByDescripcionContains(String descripcionProducto) throws BusinessException, NotFoundException;
 
     public Producto findByPrecioListaAfter(double precio) throws BusinessException, NotFoundException;
+
+    public List<Producto> findByIngredienteListDescripcion(String descripcion) throws BusinessException, NotFoundException;
+
+    public Page<Producto> findAllPage(Pageable pageable);
+
 }

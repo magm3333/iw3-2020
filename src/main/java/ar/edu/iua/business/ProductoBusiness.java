@@ -1,5 +1,6 @@
 package ar.edu.iua.business;
 
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 
@@ -7,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import ar.edu.iua.business.exception.BusinessException;
@@ -93,6 +96,22 @@ public class ProductoBusiness implements IProductoBusiness {
         if (!op.isPresent())
             throw new NotFoundException("No se encuentra el producto con precio mayor a " + precioMayor);
         return op.get();
+
+    }
+
+    @Override
+    public List<Producto>  findByIngredienteListDescripcion(String descripcion) throws BusinessException, NotFoundException {
+        try {
+            return productoDAO.findByIngredienteListDescripcionIngrediente(descripcion);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new BusinessException(e);
+        }
+
+    }
+
+    public Page<Producto> findAllPage(Pageable pageable) {
+            return productoDAO.findAll(pageable);
 
     }
 

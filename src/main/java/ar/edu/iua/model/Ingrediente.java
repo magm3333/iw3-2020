@@ -1,33 +1,30 @@
 package ar.edu.iua.model;
 
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name="proveedor")
-@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
+@Table(name="ingredientes")
 @JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="id")
-public class Proveedor {
 
+
+public class Ingrediente {
 
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(name = "descripcion", length = 100)
+    private String descripcionIngrediente;
 
-
-
-    private String nombre;
-
-    @OneToMany(targetEntity=Producto.class, mappedBy="proveedor", fetch = FetchType.LAZY)
+    @ManyToMany(targetEntity = Producto.class, mappedBy = "ingredienteList")
     @JsonBackReference
     private List<Producto> productoList;
-
 
     public int getId() {
         return id;
@@ -35,12 +32,11 @@ public class Proveedor {
     public void setId(int id) {
         this.id = id;
     }
-
-    public String getNombre() {
-        return nombre;
+    public String getDescripcionIngrediente() {
+        return descripcionIngrediente;
     }
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setDescripcionIngrediente(String descripcionIngrediente) {
+        this.descripcionIngrediente = descripcionIngrediente;
     }
 
     public List<Producto> getProductoList() {
@@ -50,4 +46,5 @@ public class Proveedor {
     public void setProductoList(List<Producto> productoList) {
         this.productoList = productoList;
     }
+
 }

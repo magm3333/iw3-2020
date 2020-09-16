@@ -1,10 +1,13 @@
 package ar.edu.iua.rest;
 
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -111,4 +114,22 @@ public class ProductosRestController extends BaseRestController {
         }
     }
 
+
+    @GetMapping(value = "/ingrediente")
+    public ResponseEntity<List<Producto>> loadByIngredienteListDescripcion(@RequestParam("desc") String desc) {
+        try {
+            return new ResponseEntity<List<Producto>>(productoBusiness.findByIngredienteListDescripcion(desc), HttpStatus.OK);
+        } catch (BusinessException e) {
+            return new ResponseEntity<List<Producto>>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<List<Producto>>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+
+    @GetMapping(value = "/productos_por_pagina")
+    public Page<Producto> loadByPage(Pageable pageable) {
+            return productoBusiness.findAllPage(pageable);
+
+    }
 }
