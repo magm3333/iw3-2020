@@ -2,7 +2,7 @@ angular.module('iw3')
 .controller('LoginController', 
 		function (
 				$rootScope, $scope, $localStorage,
-				$uibModalInstance, 
+				$uibModalInstance, SweetAlert,
 				coreService,$log) {
 			$scope.title="Ingreso";
 			
@@ -20,10 +20,12 @@ angular.module('iw3')
 						}else{
 							delete $localStorage.userdata;
 							$localStorage.logged=false;
+							SweetAlert.swal(resp.data, "Problemas autententicando", "error");
 						}
 					},
 					function(respErr){
 						$log.log(respErr);
+						SweetAlert.swal(respErr.data, "Problemas autententicando", "error");
 					}
 				);
 			  };  
