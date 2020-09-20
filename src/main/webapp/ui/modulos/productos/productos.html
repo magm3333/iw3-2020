@@ -22,7 +22,7 @@
 							</div>
 							<div class="col-md-2">
 								<button ng-click="refresh(textoABuscar && textoABuscar.length>2 ? textoABuscar : false)" class="btn btn-default glyphicon glyphicon-refresh" title="Refrescar lista"></button>
-								<button class="btn btn-primary pull-right" title="Agregar un nuevo producto"><i class="glyphicon glyphicon-plus"></i> Agregar</button>
+								<button ng-click="addEdit(false)" class="btn btn-primary pull-right" title="Agregar un nuevo producto"><i class="glyphicon glyphicon-plus"></i> Agregar</button>
 							</div>
 						</div>
 					</div>
@@ -43,7 +43,7 @@
 					<tr
 						ng-repeat="p in data.slice(((paginaActual-1)*itemsPorPagina), ((paginaActual)*itemsPorPagina))">
 						<td>{{p.id}}</td>
-						<td>{{p.nombre}}</td>
+						<td popover-append-to-body="true" uib-popover="{{p.descripcion}}" popover-trigger="'mouseenter'">{{p.nombre}}</td>
 						<td style="text-align: right;">{{p.precioLista | number:2}}</td>
 						<td>
 							<button ng-click="addEdit(p)" class="btn btn-warning glyphicon glyphicon-pencil" title="Editar"></button>

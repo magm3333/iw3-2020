@@ -1,7 +1,7 @@
 var moduloProductos=angular.module('productos',['ui.bootstrap','ui-notification','oitozero.ngSweetAlert']);
 
 moduloProductos.controller('ProductosController',
-	function($scope, $rootScope, SweetAlert, Notification, productosService) {
+	function($scope, $rootScope, SweetAlert, Notification, $uibModal, productosService) {
 		$scope.title="Productos";
 		
 		$scope.data=[];
@@ -30,11 +30,45 @@ moduloProductos.controller('ProductosController',
 		
 		
 		$scope.addEdit=function(p){
-			if(p) { //Editar
-				
-			} else { //Agregar
-			
-			}
+			var modalInstance = $uibModal.open({
+				animation : true,
+				backdrop : false,
+				ariaLabelledBy : 'modal-title',
+				ariaDescribedBy : 'modal-body',
+				templateUrl : 'ui/modulos/productos/add-edit-modal-form.html',
+				controller : 'AgregaEditaProductoModal',
+				controllerAs : '$ctrl',
+				size : 'large',
+				resolve : {
+					producto : angular.copy(p)
+				}
+			});
+
+			modalInstance.result.then(function(instance) {
+				if (!p) { //Agregar
+					productosService.add(instance).then(
+						function(resp) {
+							$scope.refresh();
+							Notification.success({message:'El producto se agregó correctamente',title:'Operación existosa!'});
+						}, 
+						function(err) {
+							Notification.error({message:'No se ha podido agregar el producto',title:'Operación fallida!'});
+						}
+					);
+				} else { //Editar
+					productosService.edit(instance).then(
+						function(resp) {
+							$scope.refresh();
+							Notification.success({message:'El producto se modificó correctamente',title:'Operación existosa!'});
+						}, 
+						function(err) {
+							Notification.error({message:'No se ha podido modificar el producto',title:'Operación fallida!'});
+						}
+					);
+				}
+			}, function() {
+
+			});
 		}; //End addEdit()
 		
 		$scope.remove=function(p) {
@@ -67,6 +101,35 @@ moduloProductos.controller('ProductosController',
 ); //End ProductosController
 
 
+
+moduloProductos.controller('AgregaEditaProductoModal',
+	function($uibModalInstance, producto) {
+		var $ctrl = this;
+		$ctrl.agregar=!producto;
+		
+		if(!producto) {
+			producto={nombre:'', precioLista:0.0, descripcion:'', enStock:false};
+		}
+		
+		$ctrl.instance=producto;
+		
+		$ctrl.verGuardar=function(){
+			return $ctrl.instance.nombre && $ctrl.instance.nombre.length>2 &&
+				   $ctrl.instance.precioLista && $ctrl.instance.precioLista>0; 
+		};
+		
+		$ctrl.ok=function() {
+			$uibModalInstance.close($ctrl.instance);
+		};
+		
+		$ctrl.volver = function() {
+			$uibModalInstance.dismiss();
+		};
+	}
+); //End AgregaEditaProductoModal
+
+
+//***************** Services ***************************
 moduloProductos.factory('productosService',
 	function($http, URL_API_BASE, URL_BASE) {
 		return {
@@ -77,8 +140,10 @@ moduloProductos.factory('productosService',
 				return $http.get(URL_API_BASE+"productos"+qs);
 			},
 			add: function(p) {
+				return $http.post(URL_API_BASE+"productos",p);
 			},
 			edit: function(p) {
+				return $http.put(URL_API_BASE+"productos",p);
 			},
 			remove: function(p) {
 				return $http.delete(URL_API_BASE+"productos/"+p.id);
