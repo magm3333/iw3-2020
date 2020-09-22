@@ -2,6 +2,8 @@ var moduloProductos=angular.module('productos',['ui.bootstrap','ui-notification'
 
 moduloProductos.controller('ProductosController',
 	function($scope, $rootScope, SweetAlert, Notification, $uibModal, productosService) {
+		
+		
 		$scope.title="Productos";
 		
 		$scope.data=[];

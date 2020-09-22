@@ -20,6 +20,10 @@ angular.module('iw3').config(
 					templateUrl : 'ui/modulos/productos/productos.html',
 					controller : 'ProductosController'
 				})
+				.when('/graficos', {
+					templateUrl : 'ui/modulos/graficos/graficos.html',
+					controller : 'GraficosController'
+				})
 				.otherwise({
 					redirectTo : '/main'
 				});
