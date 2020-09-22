@@ -24,12 +24,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-
-
 @Entity
 @Table(name = "users")
-public class User implements Serializable,  UserDetails {
-
+public class User implements Serializable, UserDetails {
 
 	public Integer getId() {
 		return id;
@@ -84,27 +81,26 @@ public class User implements Serializable,  UserDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	
+
 	@Column(length = 80, nullable = false)
 	private String nombre;
-	
+
 	@Column(length = 300, nullable = false, unique = true)
 	private String email;
-	
+
 	@Column(length = 80, nullable = false)
 	private String apellido;
-	
+
 	@Column(length = 30, nullable = false, unique = true)
 	private String username;
-	
+
 	@Column(length = 100)
 	private String password;
-	
+
 	@ManyToOne
-	@JoinColumn(name="id_rol_principal")
+	@JoinColumn(name = "id_rol_principal")
 	private Rol rolPrincipal;
-	
-	
+
 	public Rol getRolPrincipal() {
 		return rolPrincipal;
 	}
@@ -114,10 +110,9 @@ public class User implements Serializable,  UserDetails {
 	}
 
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name="users_roles", 
-		joinColumns= {@JoinColumn(name="id_user", referencedColumnName = "id")}, 
-		inverseJoinColumns = {@JoinColumn(name="id_rol", referencedColumnName = "id")}
-	)
+	@JoinTable(name = "users_roles", joinColumns = {
+			@JoinColumn(name = "id_user", referencedColumnName = "id") }, inverseJoinColumns = {
+					@JoinColumn(name = "id_rol", referencedColumnName = "id") })
 	private Set<Rol> roles;
 
 	public Set<Rol> getRoles() {
@@ -172,31 +167,27 @@ public class User implements Serializable,  UserDetails {
 	@Column(columnDefinition = "tinyint default 1")
 	private boolean enabled;
 
-	@Transient 
+	@Transient
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		
-		/*List<GrantedAuthority> authorities=new ArrayList<GrantedAuthority>();
-		for(Rol role:getRoles()) {
-			authorities.add(new SimpleGrantedAuthority(role.getRol()));
-		}*/
-		
+
+		/*
+		 * List<GrantedAuthority> authorities=new ArrayList<GrantedAuthority>(); for(Rol
+		 * role:getRoles()) { authorities.add(new
+		 * SimpleGrantedAuthority(role.getRol())); }
+		 */
+
 		List<GrantedAuthority> authorities = getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getRol()))
 				.collect(Collectors.toList());
-		
-		
-		
+
 		return authorities;
 	}
 
-	
-	@Transient 
+	@Transient
 	public String getNombreCompleto() {
 		return String.format("%s, %s", getApellido(), getNombre());
 	}
-	
- 
-	
+
 	public String checkAccount(PasswordEncoder passwordEncoder, String password) {
 		if (!passwordEncoder.matches(password, getPassword()))
 			return "BAD_PASSWORD";
@@ -208,27 +199,31 @@ public class User implements Serializable,  UserDetails {
 			return "CREDENTIALS_EXPIRED";
 		if (!isAccountNonExpired())
 			return "ACCOUNT_EXPIRED";
-		
-		
+
 		return null;
 	}
 
+	@Transient
+	private String sessionToken;
 
-/*
- 
- R1--------
- R2--------
- R3--------
- .stream()
- 
- R1-------- R2--------  R3--------
- 
- .collect()
- 
- R1--------
- R2--------
- R3--------
- 
- */
-	
+	public String getSessionToken() {
+		return sessionToken;
+	}
+
+	public void setSessionToken(String sessionToken) {
+		this.sessionToken = sessionToken;
+	}
+
+	/*
+	 * 
+	 * R1-------- R2-------- R3-------- .stream()
+	 * 
+	 * R1-------- R2-------- R3--------
+	 * 
+	 * .collect()
+	 * 
+	 * R1-------- R2-------- R3--------
+	 * 
+	 */
+
 }

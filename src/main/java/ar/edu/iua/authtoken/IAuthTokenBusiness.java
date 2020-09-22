@@ -11,5 +11,7 @@ public interface IAuthTokenBusiness {
 	public void delete(AuthToken at) throws BusinessException;
 
 	public void purgeTokens() throws BusinessException;
+	
+	public void delete(String token) throws BusinessException ;
 
 }

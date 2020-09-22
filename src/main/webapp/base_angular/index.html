@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+
+        <script type="text/javascript" src="modules/angular/angular.min.js"></script>
+
+        <script type="text/javascript" src="app.js"></script>
+    </head>
+    
+
+    <body ng-app="iw3"> 
+        <h1>Ejemplo AngularJS</h1>
+        {{ 1+3 }}
+
+        <div ng-controller="Div1Controller">
+            {{titulo}}
+
+            <input type="number" ng-model="fontSize"/>
+            <label style="font-size: {{fontSize}}px;">Texto de ejemplo</label>
+
+            <hr/>
+
+            Prendido: <input type="checkbox" ng-model="prendido"/> {{prendido}}
+
+            <div ng-show="prendido"> esto tiene información importante!
+            </div>
+            <br/>
+            Nombre: <input type="text" ng-model="nombre"/>
+            <br/>
+            Edad: <input type="text" ng-model="edad"/>
+            <br/>
+            <button ng-click="agregar()">Agregar</button>
+            <ul>
+                <li ng-repeat="p in datos">Nombre: {{p.nombre}} , edad: {{p.edad}}</li>
+
+            </ul>
+
+        </div>
+        <hr/>      <hr/>
+        <div ng-controller="Div2Controller">
+            {{titulo}}
+        </div>
+    </body>
+</html>

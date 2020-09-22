@@ -58,12 +58,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers("/anonymous*").anonymous()
 			.antMatchers("/login*").permitAll()
 			.antMatchers("/logout*").permitAll()
+
+		 	.antMatchers("/index.html").permitAll()
+			.antMatchers("/favicon.*").permitAll()	   
+			.antMatchers("/ui/**").permitAll()
+
 			.anyRequest().authenticated();
 			// @formatter:on
 
 		http.addFilterAfter(new CustomTokenAuthenticationFilter(authTokenBusiness, userBusiness),
 				UsernamePasswordAuthenticationFilter.class);
-		
+
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
 		// Cliente (Brower) ----> | App Server (tomcat) --> App --> (Filtro1 , Filtro2,

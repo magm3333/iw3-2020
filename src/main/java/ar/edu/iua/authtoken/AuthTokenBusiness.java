@@ -59,5 +59,17 @@ public class AuthTokenBusiness implements IAuthTokenBusiness {
 		}
 
 	}
+	
+	@Override
+	public void delete(String token) throws BusinessException {
+		try {
+			String serie = AuthToken.decode(token)[0];
+			authTokenDAO.deleteById(serie);
+		} catch (Exception e) {
+			throw new BusinessException(e);
+		}
+
+	}
+
 
 }
