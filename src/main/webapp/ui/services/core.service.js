@@ -1,9 +1,7 @@
-angular.module('iw3').factory('coreService',
+angular.module('iw3')
+	.factory('coreService',
 		function($http, $q, URL_API_BASE, URL_BASE,$localStorage) {
 			return {
-				logout: function() {
-					 return $http.get(URL_BASE+"logout"); 
-				},
 				login: function(user) {
 					var req = {
 						method: 'POST',
