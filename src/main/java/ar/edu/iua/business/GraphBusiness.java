@@ -24,7 +24,7 @@ public class GraphBusiness implements IGraphBusiness {
 	@Override
 	public void pushGraphData() {
 		try {
-			String[] meses = "Enero,Febrero,Marzo,Abril,Mayo,Junio,Julio,Agosto,Sptiembre,Octubre,Noviembre,Diciembre"
+			String[] meses = "Enero,Febrero,Marzo,Abril,Mayo,Junio,Julio,Agosto,Septiembre,Octubre,Noviembre,Diciembre"
 					.split(",");
 			List<LabelValue> valores = Arrays.stream(meses).map(mes -> {
 				return new LabelValue(mes, ((int) (Math.random() * 100)));
