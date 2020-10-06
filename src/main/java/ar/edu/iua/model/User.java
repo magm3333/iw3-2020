@@ -225,5 +225,16 @@ public class User implements Serializable, UserDetails {
 	 * R1-------- R2-------- R3--------
 	 * 
 	 */
+	
+	@Column(columnDefinition = "int default 360")
+	private int sessionTimeout;
+
+	public int getSessionTimeout() {
+		return sessionTimeout;
+	}
+
+	public void setSessionTimeout(int sessionTimeout) {
+		this.sessionTimeout = sessionTimeout;
+	}
 
 }
