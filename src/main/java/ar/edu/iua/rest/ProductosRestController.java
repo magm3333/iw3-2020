@@ -1,5 +1,6 @@
 package ar.edu.iua.rest;
 
+import ar.edu.iua.model.ProductoDTO;
 import org.springframework.data.domain.Pageable;
 import java.util.List;
 
@@ -131,5 +132,40 @@ public class ProductosRestController extends BaseRestController {
     public Page<Producto> loadByPage(Pageable pageable) {
             return productoBusiness.findAllPage(pageable);
 
+    }
+
+
+    @GetMapping(value = "/galletas")
+    public ResponseEntity<List<Producto>> loadGalletas() {
+        try {
+            return new ResponseEntity<List<Producto>>(productoBusiness.findNombreLikeGalleta(), HttpStatus.OK);
+        } catch (BusinessException e) {
+            return new ResponseEntity<List<Producto>>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<List<Producto>>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+
+    @GetMapping(value = "/harina")
+    public ResponseEntity<List<Producto>> loadHarina(@RequestParam("ingrediente") String ingrediente) {
+        try {
+            return new ResponseEntity<List<Producto>>(productoBusiness.findProductoIngredienteHarina( ingrediente), HttpStatus.OK);
+        } catch (BusinessException e) {
+            return new ResponseEntity<List<Producto>>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<List<Producto>>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping(value = "/buscar_precio")
+    public ResponseEntity<List<ProductoDTO>> loadPrecio(@RequestParam("precio") double p) {
+        try {
+            return new ResponseEntity<List<ProductoDTO>>(productoBusiness.findByElPrecio(p), HttpStatus.OK);
+        } catch (BusinessException e) {
+            return new ResponseEntity<List<ProductoDTO>>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<List<ProductoDTO>>(HttpStatus.NOT_FOUND);
+        }
     }
 }

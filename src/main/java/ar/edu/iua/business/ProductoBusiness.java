@@ -1,5 +1,6 @@
 package ar.edu.iua.business;
 
+import ar.edu.iua.model.ProductoDTO;
 import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
@@ -112,6 +113,42 @@ public class ProductoBusiness implements IProductoBusiness {
 
     public Page<Producto> findAllPage(Pageable pageable) {
             return productoDAO.findAll(pageable);
+
+    }
+
+
+
+    @Override
+    public List<Producto>  findNombreLikeGalleta() throws BusinessException, NotFoundException {
+        try {
+            return productoDAO.findNombreLikeGalleta();
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new BusinessException(e);
+        }
+
+    }
+
+    @Override
+    public List<Producto>  findProductoIngredienteHarina(String ingrediente) throws BusinessException, NotFoundException {
+        try {
+            return productoDAO.findProductoIngredienteHarina(ingrediente);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new BusinessException(e);
+        }
+
+    }
+
+
+    @Override
+    public List<ProductoDTO>  findByElPrecio(double precio) throws BusinessException, NotFoundException {
+        try {
+            return productoDAO.findByElPrecio(precio);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new BusinessException(e);
+        }
 
     }
 

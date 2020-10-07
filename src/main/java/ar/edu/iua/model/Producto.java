@@ -12,6 +12,24 @@ import javax.persistence.*;
 @Table(name = "productos")
 @JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="id")
 
+@NamedNativeQuery(name = "Producto.findByElPrecio2", query = "select * from productos where precio_lista = ?1", resultClass = Producto.class)
+
+
+@NamedNativeQuery(name = "Producto.findByElPrecio", query = "select p.nombre, p.descripcion, p.precio_lista from productos p where precio_lista = ?1", resultSetMapping = "productomap")
+@SqlResultSetMapping(
+        name="productomap",
+        classes = {
+                @ConstructorResult(
+                        columns = {
+                                @ColumnResult(name = "p.nombre", type = String.class),
+                                @ColumnResult(name = "p.descripcion", type = String.class),
+                                @ColumnResult(name = "p.precio_lista", type = double.class)
+                        },
+                        targetClass = ProductoDTO.class
+                )
+        }
+)
+
 public class Producto implements Serializable {
 
 	private static final long serialVersionUID = 451621105748580924L;
@@ -111,4 +129,10 @@ public class Producto implements Serializable {
         this.ingredienteList = ingredienteList;
     }
 
+
+    public Producto(String nombre, String descripcion, double precioLista) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.precioLista = precioLista;
+    }
 }

@@ -1,5 +1,6 @@
 package ar.edu.iua.business;
 
+import ar.edu.iua.model.ProductoDTO;
 import org.springframework.data.domain.Pageable;
 import java.util.List;
 
@@ -28,5 +29,12 @@ public interface IProductoBusiness {
     public List<Producto> findByIngredienteListDescripcion(String descripcion) throws BusinessException, NotFoundException;
 
     public Page<Producto> findAllPage(Pageable pageable);
+
+    public List<Producto> findNombreLikeGalleta() throws BusinessException, NotFoundException;
+
+    public List<Producto> findProductoIngredienteHarina(String ingrediente) throws BusinessException, NotFoundException;
+
+    public  List<ProductoDTO> findByElPrecio(double price) throws BusinessException, NotFoundException;
+
 
 }
