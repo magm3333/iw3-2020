@@ -1,14 +1,17 @@
 angular.module('iw3',
 	[ 'ngRoute', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ui.bootstrap',
-	  'ngStorage', 'oitozero.ngSweetAlert', 'productos'])
+	  'ngStorage', 'oitozero.ngSweetAlert', 'productos',
+	  'graficos', 'chart.js', 'ngStomp'])
 	  
 	  	  
 .constant('URL_API_BASE', 'http://localhost:8080/api/v1/')
 .constant('URL_BASE', 'http://localhost:8080/')
+.constant('URL_WS', '/api/v1/ws')
 
+.run(['$rootScope','$uibModal','coreService','$location','$log','$localStorage','$stomp',
+	function($rootScope, $uibModal, coreService, $location, $log,$localStorage,$stomp) {
 
-.run(['$rootScope','$uibModal','coreService','$location','$log','$localStorage',
-	function($rootScope, $uibModal, coreService, $location, $log,$localStorage) {
+	$rootScope.stomp=$stomp;
 
 	$rootScope.relocate = function(loc) {
 		$rootScope.oldLoc=$location.$$path;

@@ -4,12 +4,14 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import ar.edu.iua.business.exception.BusinessException;
 import ar.edu.iua.business.exception.NotFoundException;
+import ar.edu.iua.eventos.ProductoEvent;
 import ar.edu.iua.model.Producto;
 import ar.edu.iua.model.persistence.ProductoRepository;
 
@@ -74,8 +76,21 @@ public class ProductoBusiness implements IProductoBusiness {
 			p.setFoto(old.getFoto());
 			p.setFotoMimeType(old.getFotoMimeType());
 		}
+		
+		if (old.getPrecioLista() < producto.getPrecioLista() * .9) {
+			generaEvento(producto, ProductoEvent.Tipo.SUBE_PRECIO);
+		}
+
+
 		return add(p);
 	}
+	@Autowired
+	private ApplicationEventPublisher appEventPublisher;
+
+	private void generaEvento(Producto producto, ProductoEvent.Tipo tipo) {
+		appEventPublisher.publishEvent(new ProductoEvent(producto, tipo));
+	}
+
 
 	@Override
 	public List<Producto> list(String parte) throws BusinessException {

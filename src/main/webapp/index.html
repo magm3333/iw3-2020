@@ -35,15 +35,21 @@
 
 <script type="text/javascript"
 	src="ui/modules/angular-ui-notification/dist/angular-ui-notification.min.js"></script>
-	
+
+<script type="text/javascript" src="ui/modules/ng-stomp/dist/ng-stomp.standalone.min.js"></script>
+<script type="text/javascript" src="ui/modules/chart.js/dist/Chart.min.js"></script>
+<script type="text/javascript" src="ui/modules/angular-chart.js/dist/angular-chart.min.js"></script>
+
 
 <script type="text/javascript" src="ui/app.js"></script>
 <script type="text/javascript" src="ui/config/routes.js"></script>
 <script type="text/javascript" src="ui/config/interceptors.js"></script>
 <script type="text/javascript" src="ui/services/core.service.js"></script>
+<script type="text/javascript" src="ui/services/ws.service.js"></script>
 <script type="text/javascript" src="ui/controllers/main.controller.js"></script>
 <script type="text/javascript" src="ui/controllers/login.controller.js"></script>
 <script type="text/javascript" src="ui/modulos/productos/productos.js"></script>
+<script type="text/javascript" src="ui/modulos/graficos/graficos.js"></script>
 
 <title>Ingeniería Web 3</title>
 </head>
@@ -75,6 +81,8 @@
 						<ul class="dropdown-menu">
 							<li><a ng-click="relocate('productos')" style="cursor: pointer;">Administración</a></li>
 						</ul></li>
+						<li><a ng-click="relocate('graficos')" role="button" aria-haspopup="true"
+						aria-expanded="false">Gráficos</a></li>
 				</ul>
 
 
