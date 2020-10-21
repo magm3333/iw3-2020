@@ -135,4 +135,7 @@ public class Producto implements Serializable {
         this.descripcion = descripcion;
         this.precioLista = precioLista;
     }
+
+    public Producto() {
+    }
 }

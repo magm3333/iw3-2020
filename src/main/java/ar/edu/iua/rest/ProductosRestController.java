@@ -168,4 +168,37 @@ public class ProductosRestController extends BaseRestController {
             return new ResponseEntity<List<ProductoDTO>>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @PutMapping(value = { "/native" }, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Producto> updateStockById (@RequestParam("id") Long id, @RequestParam("enStock") boolean enStock) {
+
+
+        try {
+            productoBusiness.updateStockById(id, enStock);
+
+            return new ResponseEntity<Producto>(productoBusiness.load(id),HttpStatus.OK);
+        } catch (BusinessException e) {
+            log.error(e.getMessage(), e);
+            return new ResponseEntity<Producto>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<Producto>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+
+    @PutMapping(value = { "/native2" }, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Producto> updatePrecioListaByNombre (@RequestBody ProductoDTO productoDTO) {
+
+
+        try {
+            long id = productoBusiness.updatePrecioListaByNombre(productoDTO);
+
+            return new ResponseEntity<Producto>(productoBusiness.load(id),HttpStatus.OK);
+        } catch (BusinessException e) {
+            log.error(e.getMessage(), e);
+            return new ResponseEntity<Producto>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<Producto>(HttpStatus.NOT_FOUND);
+        }
+    }
 }

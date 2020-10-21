@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import ar.edu.iua.business.exception.BusinessException;
@@ -32,6 +33,7 @@ public class ProductoBusiness implements IProductoBusiness {
 		Optional<Producto> op;
 		try {
 			op = productoDAO.findById(id);
+
 		} catch (Exception e) {
 			throw new BusinessException(e);
 		}
@@ -151,5 +153,22 @@ public class ProductoBusiness implements IProductoBusiness {
         }
 
     }
+
+    @Override
+    public void updateStockById(Long id, boolean enStock) {
+        productoDAO.updateStockById(id, enStock);
+    }
+
+    @Override
+    public Long updatePrecioListaByNombre(ProductoDTO productoDTO) {
+
+
+        productoDAO.updatePrecioListaByNombre(productoDTO.getPrecioLista(), productoDTO.getNombre());
+        Optional<Producto> p = productoDAO.findByNombre(productoDTO.getNombre());
+
+
+        return p.get().getId();
+    }
+
 
 }

@@ -9,6 +9,7 @@ import ar.edu.iua.business.exception.NotFoundException;
 import ar.edu.iua.model.Producto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.query.Param;
 
 public interface IProductoBusiness {
 
@@ -36,5 +37,8 @@ public interface IProductoBusiness {
 
     public  List<ProductoDTO> findByElPrecio(double price) throws BusinessException, NotFoundException;
 
+    void updateStockById(Long id, boolean enStock);
 
+
+    public Long updatePrecioListaByNombre(ProductoDTO productoDTO);
 }
