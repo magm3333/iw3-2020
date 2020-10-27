@@ -21,4 +21,6 @@ public final class Constantes {
 	public static final String TOPIC_SEND_WEBSOCKET_GRAPH="/iw3/data";
 	
 	public static final String URL_GRAPH = URL_BASE + "/graph";
+	
+	public static final String URL_OPORTUNIDAD_VENTAS = URL_BASE + "/oportunidad-ventas";
 }

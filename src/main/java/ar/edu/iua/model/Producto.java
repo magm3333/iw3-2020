@@ -21,35 +21,32 @@ import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel(value = "Producto", description = "Modelo de producto de ventas")
 @Entity
-@Table(name="produtos")
+@Table(name = "produtos")
 @TypeDef(name = "json", typeClass = JsonStringType.class)
 public class Producto implements Serializable {
 
 	private static final long serialVersionUID = 5081791146397214235L;
-	
+
 	@ApiModelProperty(notes = "Identificador del producto, clave autogenerada", required = false)
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@ApiModelProperty(notes = "Nombre del producto", required = true)
 	@Column(length = 100, nullable = false)
 	private String nombre;
-	
+
 	@ApiModelProperty(notes = "Descripción extendida del producto", required = true)
 	@Column(length = 200)
 	private String descripcion;
-	
+
 	@ApiModelProperty(notes = "Precio actual del producto", required = true)
 	private double precioLista;
-	
-	
+
 	@ApiModelProperty(notes = "Indica si el producto se encuentra actualmente en stock", required = true)
 	@Column(columnDefinition = "TINYINT DEFAULT 0")
 	private boolean enStock;
-	
-	
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -90,7 +87,6 @@ public class Producto implements Serializable {
 		this.enStock = enStock;
 	}
 
-
 	public String getComentarios() {
 		return comentarios;
 	}
@@ -115,19 +111,40 @@ public class Producto implements Serializable {
 		this.fotoMimeType = fotoMimeType;
 	}
 
-
-	@Type(type="json")
+	@Type(type = "json")
 	@Column(columnDefinition = "JSON null")
 	private String comentarios;
-	
+
 	@JsonIgnore
 	@Lob
 	private byte[] foto;
-	
+
 	@JsonIgnore
 	@Column(length = 50)
 	private String fotoMimeType;
-	
-	
+
+	@Column(length = 50, nullable = true, unique = true)
+	private String codigoExterno;
+
+	public String getCodigoExterno() {
+		return codigoExterno;
+	}
+
+	public void setCodigoExterno(String codigoExterno) {
+		this.codigoExterno = codigoExterno;
+	}
+
+	public Producto() {
+
+	}
+
+	public Producto(Producto producto) {
+		this.codigoExterno = producto.codigoExterno;
+		this.nombre = producto.nombre;
+		this.descripcion = producto.getDescripcion();
+		this.precioLista = producto.getPrecioLista();
+		
+		//Aquí el resto de los datos a copiar
+	}
 
 }

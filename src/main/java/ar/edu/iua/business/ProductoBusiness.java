@@ -76,21 +76,20 @@ public class ProductoBusiness implements IProductoBusiness {
 			p.setFoto(old.getFoto());
 			p.setFotoMimeType(old.getFotoMimeType());
 		}
-		
+
 		if (old.getPrecioLista() < producto.getPrecioLista() * .9) {
 			generaEvento(producto, ProductoEvent.Tipo.SUBE_PRECIO);
 		}
 
-
 		return add(p);
 	}
+
 	@Autowired
 	private ApplicationEventPublisher appEventPublisher;
 
 	private void generaEvento(Producto producto, ProductoEvent.Tipo tipo) {
 		appEventPublisher.publishEvent(new ProductoEvent(producto, tipo));
 	}
-
 
 	@Override
 	public List<Producto> list(String parte) throws BusinessException {
@@ -112,6 +111,35 @@ public class ProductoBusiness implements IProductoBusiness {
 			throw new BusinessException(e);
 		}
 
+	}
+
+	@Override
+	public Producto load(String codigoExterno) throws NotFoundException, BusinessException {
+		Optional<Producto> op;
+		try {
+			op = productoDAO.findFirstByCodigoExterno(codigoExterno);
+		} catch (Exception e) {
+			throw new BusinessException(e);
+		}
+		if (!op.isPresent()) {
+			throw new NotFoundException(
+					"El producto con código externo " + codigoExterno + " no se encuentra en la BD");
+		}
+		return op.get();
+	}
+
+	@Override
+	public Producto asegurarProducto(Producto producto) throws BusinessException {
+		Producto p = null;
+		try {
+			p = load(producto.getCodigoExterno());
+			p.setNombre(producto.getNombre());
+			p.setPrecioLista(producto.getPrecioLista());
+			// Colocar aquí los datos recibidos no opcionales
+		} catch (NotFoundException e) {
+			p = new Producto(producto);
+		}
+		return productoDAO.save(p);
 	}
 
 }
