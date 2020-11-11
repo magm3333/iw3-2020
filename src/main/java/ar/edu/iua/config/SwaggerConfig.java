@@ -5,6 +5,8 @@ package ar.edu.iua.config;
         import org.springframework.context.annotation.*;
         import static springfox.documentation.builders.PathSelectors.regex;
         import java.util.Collections;
+
+        import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
         import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
         import springfox.documentation.builders.ApiInfoBuilder;
@@ -19,7 +21,9 @@ package ar.edu.iua.config;
 
 @Configuration
 @EnableSwagger2
+@Import(BeanValidatorPluginsConfiguration.class)
 public class SwaggerConfig {
+
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
@@ -28,4 +32,5 @@ public class SwaggerConfig {
                 .paths(PathSelectors.any())
                 .build();
     }
+
 }

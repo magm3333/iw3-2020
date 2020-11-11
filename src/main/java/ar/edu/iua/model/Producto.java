@@ -1,7 +1,10 @@
 package ar.edu.iua.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import io.swagger.annotations.*;
+
 
 import java.io.Serializable;
 import java.util.List;
@@ -12,10 +15,16 @@ import javax.persistence.*;
 @Table(name = "productos")
 @JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="id")
 
-@NamedNativeQuery(name = "Producto.findByElPrecio2", query = "select * from productos where precio_lista = ?1", resultClass = Producto.class)
+@NamedNativeQueries({
+
+@NamedNativeQuery(name = "Producto.findByElPrecio2", query = "select * from productos where precio_lista = ?1", resultClass = Producto.class),
+@NamedNativeQuery(name = "Producto.findByElNombre", query = "select * from productos where nombre = ?1", resultClass = Producto.class),
 
 
 @NamedNativeQuery(name = "Producto.findByElPrecio", query = "select p.nombre, p.descripcion, p.precio_lista from productos p where precio_lista = ?1", resultSetMapping = "productomap")
+
+})
+
 @SqlResultSetMapping(
         name="productomap",
         classes = {
@@ -30,6 +39,8 @@ import javax.persistence.*;
         }
 )
 
+@ApiModel(description = "Class representing a product in the application.")
+
 public class Producto implements Serializable {
 
 	private static final long serialVersionUID = 451621105748580924L;
@@ -39,10 +50,17 @@ public class Producto implements Serializable {
 	private Long id;
 
 	@Column(length = 100)
-	private String nombre;
+
+    @ApiModelProperty(notes = "Nombre del producto.",
+            example = "Arroz", required = true)
+    private String nombre;
 	@Column(length = 250)
 	private String descripcion;
-	private double precioLista;
+
+
+    @ApiModelProperty(notes = "Precio lista",
+            example = "20", required = false, allowableValues = "range[15, 6500]")
+    private double precioLista;
 	@Column(columnDefinition = "TINYINT DEFAULT 0")
 	private boolean enStock;
 
@@ -58,10 +76,10 @@ public class Producto implements Serializable {
 
 
 
-    @ManyToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany
     @JoinTable(name = "producto_ingrediente_detalle",
             joinColumns = @JoinColumn(name = "producto_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "ingrediente_id", referencedColumnName = "id"))
+            inverseJoinColumns = @JoinColumn(name = "ingrediente_id", referencedColumnName = "id", updatable=true))
     private List<Ingrediente> ingredienteList;
 
 
@@ -73,6 +91,7 @@ public class Producto implements Serializable {
 		this.id = id;
 	}
 
+    @ApiModelProperty(required = true)
 	public String getNombre() {
 		return nombre;
 	}
@@ -138,4 +157,6 @@ public class Producto implements Serializable {
 
     public Producto() {
     }
+
+
 }
